@@ -14,7 +14,7 @@ import { Pagination, PaginationContent, PaginationItem, PaginationLink, Paginati
 
 function OtherAppraiserInteractionList() {
 
-  const { appraiser_interactions, updateInteractionDescription } = useGeneralStore();
+  const { appraiser_interactions, updateInteractionDescription, currentAppraiser } = useGeneralStore(); // VARIÁVEL CORRIGIDA AQUI
   const [supervisors] = useState<supervisors[]>(mockSupervisors);
   const [snipers] = useState<appraiser[]>(mockSnipers);
 
@@ -23,8 +23,10 @@ function OtherAppraiserInteractionList() {
   const ITEMS_PER_PAGE = 10;
 
   const filteredInteractions = appraiser_interactions.filter(interaction =>
-    interaction.interaction.analyst.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    interaction.interaction.id.toString().toLowerCase().includes(searchTerm.toLowerCase())
+    interaction.interaction.appraiser &&
+    interaction.interaction.appraiser !== currentAppraiser && // VARIÁVEL CORRIGIDA AQUI
+    (interaction.interaction.analyst.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      interaction.interaction.id.toString().toLowerCase().includes(searchTerm.toLowerCase()))
   );
 
   const totalPages = Math.ceil(filteredInteractions.length / ITEMS_PER_PAGE);

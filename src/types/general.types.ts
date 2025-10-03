@@ -1,3 +1,4 @@
+// src/types/general.types.ts
 export type interactions = {
   appraiser: string | null;
   id: string;
@@ -20,10 +21,18 @@ export type appraiser = {
   name: string;
 }
 
+export type SocketStateData = {
+  interactions: interactions[];
+  appraiser_interactions: appraiserInteractions[];
+};
+
 export type generalStore = {
   interactions: interactions[];
   appraiser_interactions: appraiserInteractions[];
-  mockAppraiser: string;
+  currentAppraiser: string | null;
+  setCurrentAppraiser: (name: string) => void;
   updateInteractionDescription: (id: string, description: string) => void;
   updateAppraiserInteraction: (id: string, appraiserName: string) => void;
+  setInitialState: (data: SocketStateData) => void;
+  updateState: (data: SocketStateData) => void;
 }
