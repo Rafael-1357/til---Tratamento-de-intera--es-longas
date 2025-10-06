@@ -1,73 +1,73 @@
-# React + TypeScript + Vite
+# TIL - Tratamento de Interações Longas
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Este projeto visa resolver o problema de acompanhamento de interações longas. Através de um painel dinâmico, é possível verificar as interações em andamento, filtrar aquelas atribuídas ao seu usuário e visualizar as demais interações que estão com outros usuários do sistema.
 
-Currently, two official plugins are available:
+## 📋 Índice
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- [📖 Sobre o Projeto](#-sobre-o-projeto)
+- [🚀 Começando](#-começando)
+  - [Pré-requisitos](#pré-requisitos)
+  - [Instalação](#instalação)
+- [🛠️ Tecnologias Utilizadas](#️-tecnologias-utilizadas)
 
-## React Compiler
+## 📖 Sobre o Projeto
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+Esta é uma aplicação full-stack construída para otimizar o gerenciamento de tarefas ou tickets que exigem um longo período de acompanhamento. A solução é dividida em:
 
-## Expanding the ESLint configuration
+* **Backend**: Uma API responsável pela lógica de negócio, autenticação e comunicação com o banco de dados.
+* **Frontend**: Uma interface de usuário reativa que consome a API do backend para apresentar os dados de forma clara e permitir a interação do usuário.
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## 🚀 Começando
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+Siga estas instruções para obter uma cópia do projeto em funcionamento na sua máquina local para desenvolvimento e testes.
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+### Pré-requisitos
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+Antes de começar, certifique-se de ter o [Node.js](https://nodejs.org/) instalado em sua máquina. Recomenda-se a versão LTS.
+
+Para verificar se você tem o Node.js e o npm instalados, execute os seguintes comandos no seu terminal:
+```bash
+node -v
+npm -v
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+### Instalação
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+1 - Acesse a pasta do projeto
+Navegue pelo terminal (CMD, PowerShell, etc.) até o diretório onde você salvou o projeto. Por exemplo:
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+cd "C:/Downloads/til - Tratamento de interações longas"
 ```
+
+2 - Configure e execute o Backend
+Em um terminal, execute os seguintes comandos:
+
+```bash
+# Navegue até a pasta do backend
+cd backend
+
+# Instale todas as dependências do projeto
+npm i
+
+# Inicie o servidor backend
+npm start
+```
+
+O servidor backend estará em execução. Mantenha este terminal aberto.
+
+3 - Configure e execute o Frontend
+Abra um novo terminal na pasta raiz do projeto (til - Tratamento de interações longas).
+
+```bash
+# Navegue até a pasta do frontend
+cd frontend
+
+# Instale todas as dependências do projeto
+npm i
+
+# Inicie o servidor de desenvolvimento do frontend
+npm run dev
+```
+
+Agora, a aplicação deve estar acessível em seu navegador, geralmente em um endereço como http://localhost:5173. Verifique o output do terminal para o endereço exato.
