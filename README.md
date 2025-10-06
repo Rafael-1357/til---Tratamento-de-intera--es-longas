@@ -8,7 +8,6 @@ Este projeto visa resolver o problema de acompanhamento de interações longas. 
 - [🚀 Começando](#-começando)
   - [Pré-requisitos](#pré-requisitos)
   - [Instalação](#instalação)
-- [🛠️ Tecnologias Utilizadas](#️-tecnologias-utilizadas)
 
 ## 📖 Sobre o Projeto
 
