@@ -27,14 +27,17 @@ io.on("connection", (socket) => {
   socket.emit("initial_state", getCurrentState());
 
   socket.on("assign_interaction", ({ interactionId, appraiserName }) => {
-    const interactionToMove = interactions.find((i) => i.id === interactionId);
-    
-    if (interactionToMove) {
-      const isAlreadyAppraised = appraiser_interactions.some(
-        (appraiserInteraction) => appraiserInteraction.interaction.id === interactionId
-      );
+    const appraisedInteractionIndex = appraiser_interactions.findIndex(
+      (appraiserInteraction) => appraiserInteraction.interaction.id === interactionId
+    );
 
-      if (!isAlreadyAppraised) {
+    if (appraisedInteractionIndex !== -1) {
+      appraiser_interactions[appraisedInteractionIndex].interaction.appraiser = appraiserName;
+      io.emit("state_updated", getCurrentState());
+    } else {
+      const interactionToMove = interactions.find((i) => i.id === interactionId);
+      
+      if (interactionToMove) {
         interactions = interactions.filter((i) => i.id !== interactionId);
         const newAppraiserInteraction = {
           interaction: { ...interactionToMove, appraiser: appraiserName },

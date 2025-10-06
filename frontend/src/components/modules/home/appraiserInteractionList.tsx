@@ -14,9 +14,9 @@ import { Pagination, PaginationContent, PaginationItem, PaginationLink, Paginati
 
 function AppraiserInteractionList() {
 
-  const { appraiser_interactions, updateInteractionDescription, currentAppraiser } = useGeneralStore();
+  const { appraiser_interactions, updateInteractionDescription, updateAppraiserInteraction, currentAppraiser } = useGeneralStore();
   const [supervisors] = useState<supervisors[]>(mockSupervisors);
-  const [snipers] = useState<appraiser[]>(mockSnipers); 
+  const [snipers] = useState<appraiser[]>(mockSnipers);
 
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
@@ -32,6 +32,11 @@ function AppraiserInteractionList() {
   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
   const endIndex = startIndex + ITEMS_PER_PAGE;
   const currentInteractions = filteredInteractions.slice(startIndex, endIndex);
+
+  const handleUpdateAppraiser = (interactionID: string, appraiserName: string) => {
+    updateAppraiserInteraction(interactionID, appraiserName);
+  }
+
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
@@ -81,7 +86,7 @@ function AppraiserInteractionList() {
                     <Checkbox className='flex items-center justify-center' aria-label="Select interaction" />
                   </TableCell>
                   <TableCell>
-                    <Select value={interaction.interaction.appraiser || ""}>
+                    <Select value={interaction.interaction.appraiser || ""} onValueChange={(value) => handleUpdateAppraiser(interaction.interaction.id, value)}>
                       <SelectTrigger className='w-32'>
                         <SelectValue placeholder="Selecione um sniper..." />
                       </SelectTrigger>

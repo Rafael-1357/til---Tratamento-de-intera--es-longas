@@ -1,6 +1,6 @@
 import InteractionsList from "../components/modules/home/interactionsList"
 import AppraiserInteractionList from "../components/modules/home/appraiserInteractionList"
-import OtherAppraiserInteractionList from "../components/modules/home/othersAppraiserInteractionList copy"
+import OtherAppraiserInteractionList from "../components/modules/home/othersAppraiserInteractionList"
 import AppraiserSelector from "../components/modules/home/appraiserSelector"
 
 function Home() {

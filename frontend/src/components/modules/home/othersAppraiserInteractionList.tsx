@@ -14,7 +14,7 @@ import { Pagination, PaginationContent, PaginationItem, PaginationLink, Paginati
 
 function OtherAppraiserInteractionList() {
 
-  const { appraiser_interactions, updateInteractionDescription, currentAppraiser } = useGeneralStore(); // VARIÁVEL CORRIGIDA AQUI
+  const { appraiser_interactions, updateInteractionDescription, updateAppraiserInteraction, currentAppraiser } = useGeneralStore();
   const [supervisors] = useState<supervisors[]>(mockSupervisors);
   const [snipers] = useState<appraiser[]>(mockSnipers);
 
@@ -24,7 +24,7 @@ function OtherAppraiserInteractionList() {
 
   const filteredInteractions = appraiser_interactions.filter(interaction =>
     interaction.interaction.appraiser &&
-    interaction.interaction.appraiser !== currentAppraiser && // VARIÁVEL CORRIGIDA AQUI
+    interaction.interaction.appraiser !== currentAppraiser &&
     (interaction.interaction.analyst.toLowerCase().includes(searchTerm.toLowerCase()) ||
       interaction.interaction.id.toString().toLowerCase().includes(searchTerm.toLowerCase()))
   );
@@ -33,6 +33,11 @@ function OtherAppraiserInteractionList() {
   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
   const endIndex = startIndex + ITEMS_PER_PAGE;
   const currentInteractions = filteredInteractions.slice(startIndex, endIndex);
+
+  const handleUpdateAppraiser = (interactionID: string, appraiserName: string) => {
+    updateAppraiserInteraction(interactionID, appraiserName);
+  }
+
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
@@ -82,7 +87,7 @@ function OtherAppraiserInteractionList() {
                     <Checkbox className='flex items-center justify-center' aria-label="Select interaction" />
                   </TableCell>
                   <TableCell>
-                    <Select value={interaction.interaction.appraiser || ""}>
+                    <Select value={interaction.interaction.appraiser || ""} onValueChange={(value) => handleUpdateAppraiser(interaction.interaction.id, value)}>
                       <SelectTrigger className='w-32'>
                         <SelectValue placeholder="Selecione um sniper..." />
                       </SelectTrigger>
