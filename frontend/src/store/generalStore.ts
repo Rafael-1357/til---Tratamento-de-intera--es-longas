@@ -39,6 +39,14 @@ export const useGeneralStore = create<generalStore>((set) => ({
   updateAppraiserInteraction: (interactionId, appraiserName) => {
     socket.emit("assign_interaction", { interactionId, appraiserName });
   },
+
+  updateFlaggedSupervisor: (interactionId, flagged) => {
+    socket.emit("update_flagged_supervisor", { interactionId, flagged });
+  },
+
+  updateSupervisorName: (interactionId, supervisorName) => {
+    socket.emit("update_supervisor_name", { interactionId, supervisorName });
+  },
 }));
 
 socket.on("initial_state", (data: SocketStateData) => {

@@ -14,7 +14,7 @@ import { Pagination, PaginationContent, PaginationItem, PaginationLink, Paginati
 
 function OtherAppraiserInteractionList() {
 
-  const { appraiser_interactions, updateInteractionDescription, updateAppraiserInteraction, currentAppraiser } = useGeneralStore();
+  const { appraiser_interactions, updateInteractionDescription, currentAppraiser, updateFlaggedSupervisor, updateSupervisorName, updateAppraiserInteraction } = useGeneralStore(); // VARIÁVEL CORRIGIDA AQUI
   const [supervisors] = useState<supervisors[]>(mockSupervisors);
   const [snipers] = useState<appraiser[]>(mockSnipers);
 
@@ -24,7 +24,7 @@ function OtherAppraiserInteractionList() {
 
   const filteredInteractions = appraiser_interactions.filter(interaction =>
     interaction.interaction.appraiser &&
-    interaction.interaction.appraiser !== currentAppraiser &&
+    interaction.interaction.appraiser !== currentAppraiser && 
     (interaction.interaction.analyst.toLowerCase().includes(searchTerm.toLowerCase()) ||
       interaction.interaction.id.toString().toLowerCase().includes(searchTerm.toLowerCase()))
   );
@@ -34,14 +34,13 @@ function OtherAppraiserInteractionList() {
   const endIndex = startIndex + ITEMS_PER_PAGE;
   const currentInteractions = filteredInteractions.slice(startIndex, endIndex);
 
-  const handleUpdateAppraiser = (interactionID: string, appraiserName: string) => {
-    updateAppraiserInteraction(interactionID, appraiserName);
-  }
-
-
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
   };
+
+  const handleUpdateAppraiser = (interactionID: string, appraiserName: string) => {
+    updateAppraiserInteraction(interactionID, appraiserName);
+  }
 
   return (
     <div className='w-full h-full flex flex-col gap-4'>
@@ -82,7 +81,7 @@ function OtherAppraiserInteractionList() {
           <TableBody>
             {
               currentInteractions.map((interaction: appraiserInteractions) => (
-                <TableRow>
+                <TableRow key={interaction.interaction.id}>
                   <TableCell>
                     <Checkbox className='flex items-center justify-center' aria-label="Select interaction" />
                   </TableCell>
@@ -113,6 +112,7 @@ function OtherAppraiserInteractionList() {
                   <TableCell>
                     <Select
                       value={String(interaction.flagged_supervisor)}
+                      onValueChange={(value) => updateFlaggedSupervisor(interaction.interaction.id, value === 'true')}
                     >
                       <SelectTrigger className="w-[180px]">
                         <SelectValue />
@@ -129,6 +129,7 @@ function OtherAppraiserInteractionList() {
                     {interaction.flagged_supervisor ? (
                       <Select
                         value={interaction.supervisor_name_flagged || ""}
+                        onValueChange={(value) => updateSupervisorName(interaction.interaction.id, value)}
                       >
                         <SelectTrigger className='w-32'>
                           <SelectValue placeholder="Selecione um supervisor..." />

@@ -33,6 +33,8 @@ export type generalStore = {
   setCurrentAppraiser: (name: string) => void;
   updateInteractionDescription: (id: string, description: string) => void;
   updateAppraiserInteraction: (id: string, appraiserName: string) => void;
+  updateFlaggedSupervisor: (id: string, flagged: boolean) => void;
+  updateSupervisorName: (id: string, supervisorName: string) => void;
   setInitialState: (data: SocketStateData) => void;
   updateState: (data: SocketStateData) => void;
 }

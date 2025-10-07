@@ -60,6 +60,24 @@ io.on("connection", (socket) => {
     io.emit("state_updated", getCurrentState());
   });
 
+  socket.on("update_flagged_supervisor", ({ interactionId, flagged }) => {
+    appraiser_interactions = appraiser_interactions.map((appraiserInteraction) =>
+      appraiserInteraction.interaction.id === interactionId
+        ? { ...appraiserInteraction, flagged_supervisor: flagged }
+        : appraiserInteraction
+    );
+    io.emit("state_updated", getCurrentState());
+  });
+
+  socket.on("update_supervisor_name", ({ interactionId, supervisorName }) => {
+    appraiser_interactions = appraiser_interactions.map((appraiserInteraction) =>
+      appraiserInteraction.interaction.id === interactionId
+        ? { ...appraiserInteraction, supervisor_name_flagged: supervisorName }
+        : appraiserInteraction
+    );
+    io.emit("state_updated", getCurrentState());
+  });
+
   socket.on("disconnect", () => {
     console.log(`Usuário desconectado: ${socket.id}`);
   });

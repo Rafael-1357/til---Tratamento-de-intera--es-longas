@@ -2,12 +2,27 @@
 
 Este projeto visa resolver o problema de acompanhamento de interações longas. Através de um painel dinâmico, é possível verificar as interações em andamento, filtrar aquelas atribuídas ao seu usuário e visualizar as demais interações que estão com outros usuários do sistema.
 
+## ✨ Diferencial: Atualizações em Tempo Real com WebSockets
+
+O principal diferencial deste projeto é a implementação de **WebSockets** para garantir a comunicação em tempo real entre todos os usuários conectados.
+
+Isso significa que o painel não precisa ser atualizado manualmente. Qualquer alteração no status de uma interação é instantaneamente refletida na tela de todos os analistas, promovendo um ambiente de trabalho mais colaborativo e eficiente.
+
+**Como funciona:**
+* **Quem está tratando?** Quando um analista se atribui a uma interação, o painel de todos os outros usuários é atualizado imediatamente, mostrando quem é o responsável e evitando que duas pessoas trabalhem na mesma tarefa.
+* **Qual o status?** Qualquer mudança de status é transmitida para todos, dando uma visão clara do progresso.
+* **Como foi tratado?** Ao finalizar uma interação, a ação é registrada e a interação é removida do painel ativo de forma automática para todos os usuários.
+
+Essa abordagem elimina a necessidade de recarregar a página e garante que a equipe tenha uma visão unificada e sempre atualizada do fluxo de trabalho.
+
+
 ## 📋 Índice
 
 - [📖 Sobre o Projeto](#-sobre-o-projeto)
 - [🚀 Começando](#-começando)
   - [Pré-requisitos](#pré-requisitos)
   - [Instalação](#instalação)
+- [🛠️ Tecnologias Utilizadas](#️-tecnologias-utilizadas)
 
 ## 📖 Sobre o Projeto
 
