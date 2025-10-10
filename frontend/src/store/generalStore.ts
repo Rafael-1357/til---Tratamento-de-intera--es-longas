@@ -1,4 +1,3 @@
-// src/store/generalStore.ts
 import { create } from "zustand";
 import type { generalStore, interactions, appraiserInteractions } from "../types/general.types";
 import { socket } from "../lib/socket";
@@ -46,6 +45,10 @@ export const useGeneralStore = create<generalStore>((set) => ({
 
   updateSupervisorName: (interactionId, supervisorName) => {
     socket.emit("update_supervisor_name", { interactionId, supervisorName });
+  },
+
+  updateInteractionStatus: (interactionId, status) => {
+    socket.emit("update_status", { interactionId, status });
   },
 }));
 

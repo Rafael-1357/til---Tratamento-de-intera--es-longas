@@ -1,4 +1,3 @@
-// backend/server.js
 const express = require("express");
 const http = require("http");
 const { Server } = require("socket.io");
@@ -75,6 +74,21 @@ io.on("connection", (socket) => {
         ? { ...appraiserInteraction, supervisor_name_flagged: supervisorName }
         : appraiserInteraction
     );
+    io.emit("state_updated", getCurrentState());
+  });
+
+  socket.on("update_status", ({ interactionId, status }) => {
+    const interactionIndex = interactions.findIndex(i => i.id === interactionId);
+    if (interactionIndex !== -1) {
+      interactions[interactionIndex].status = status;
+    } else {
+      const appraiserInteractionIndex = appraiser_interactions.findIndex(
+        i => i.interaction.id === interactionId
+      );
+      if (appraiserInteractionIndex !== -1) {
+        appraiser_interactions[appraiserInteractionIndex].interaction.status = status;
+      }
+    }
     io.emit("state_updated", getCurrentState());
   });
 
