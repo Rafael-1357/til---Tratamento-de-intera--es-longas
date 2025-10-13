@@ -26,28 +26,30 @@ io.on("connection", (socket) => {
   socket.emit("initial_state", getCurrentState());
 
   socket.on("assign_interaction", ({ interactionId, appraiserName }) => {
-    const appraisedInteractionIndex = appraiser_interactions.findIndex(
-      (appraiserInteraction) => appraiserInteraction.interaction.id === interactionId
-    );
-
-    if (appraisedInteractionIndex !== -1) {
-      appraiser_interactions[appraisedInteractionIndex].interaction.appraiser = appraiserName;
-      io.emit("state_updated", getCurrentState());
-    } else {
-      const interactionToMove = interactions.find((i) => i.id === interactionId);
-      
-      if (interactionToMove) {
-        interactions = interactions.filter((i) => i.id !== interactionId);
-        const newAppraiserInteraction = {
-          interaction: { ...interactionToMove, appraiser: appraiserName },
-          description: "",
-          flagged_supervisor: false,
-          supervisor_name_flagged: "",
-        };
-        appraiser_interactions.push(newAppraiserInteraction);
-        io.emit("state_updated", getCurrentState());
+    const ids = Array.isArray(interactionId) ? interactionId : [interactionId];
+    ids.forEach(id => {
+      const appraisedInteractionIndex = appraiser_interactions.findIndex(
+        (appraiserInteraction) => appraiserInteraction.interaction.id === id
+      );
+  
+      if (appraisedInteractionIndex !== -1) {
+        appraiser_interactions[appraisedInteractionIndex].interaction.appraiser = appraiserName;
+      } else {
+        const interactionToMove = interactions.find((i) => i.id === id);
+        
+        if (interactionToMove) {
+          interactions = interactions.filter((i) => i.id !== id);
+          const newAppraiserInteraction = {
+            interaction: { ...interactionToMove, appraiser: appraiserName },
+            description: "",
+            flagged_supervisor: false,
+            supervisor_name_flagged: "",
+          };
+          appraiser_interactions.push(newAppraiserInteraction);
+        }
       }
-    }
+    });
+    io.emit("state_updated", getCurrentState());
   });
 
   socket.on("update_description", ({ interactionId, newDescription }) => {
@@ -78,17 +80,20 @@ io.on("connection", (socket) => {
   });
 
   socket.on("update_status", ({ interactionId, status }) => {
-    const interactionIndex = interactions.findIndex(i => i.id === interactionId);
-    if (interactionIndex !== -1) {
-      interactions[interactionIndex].status = status;
-    } else {
-      const appraiserInteractionIndex = appraiser_interactions.findIndex(
-        i => i.interaction.id === interactionId
-      );
-      if (appraiserInteractionIndex !== -1) {
-        appraiser_interactions[appraiserInteractionIndex].interaction.status = status;
+    const ids = Array.isArray(interactionId) ? interactionId : [interactionId];
+    ids.forEach(id => {
+      const interactionIndex = interactions.findIndex(i => i.id === id);
+      if (interactionIndex !== -1) {
+        interactions[interactionIndex].status = status;
+      } else {
+        const appraiserInteractionIndex = appraiser_interactions.findIndex(
+          i => i.interaction.id === id
+        );
+        if (appraiserInteractionIndex !== -1) {
+          appraiser_interactions[appraiserInteractionIndex].interaction.status = status;
+        }
       }
-    }
+    });
     io.emit("state_updated", getCurrentState());
   });
 

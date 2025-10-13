@@ -12,6 +12,7 @@ export const useGeneralStore = create<generalStore>((set) => ({
   interactions: [],
   appraiser_interactions: [],
   currentAppraiser: mockSnipers[0]?.name || null,
+  selectedInteractions: [],
 
   setCurrentAppraiser: (appraiserName: string) => {
     set({ currentAppraiser: appraiserName });
@@ -36,7 +37,8 @@ export const useGeneralStore = create<generalStore>((set) => ({
   },
   
   updateAppraiserInteraction: (interactionId, appraiserName) => {
-    socket.emit("assign_interaction", { interactionId, appraiserName });
+    const ids = Array.isArray(interactionId) ? interactionId : [interactionId];
+    socket.emit("assign_interaction", { interactionId: ids, appraiserName });
   },
 
   updateFlaggedSupervisor: (interactionId, flagged) => {
@@ -48,7 +50,16 @@ export const useGeneralStore = create<generalStore>((set) => ({
   },
 
   updateInteractionStatus: (interactionId, status) => {
-    socket.emit("update_status", { interactionId, status });
+    const ids = Array.isArray(interactionId) ? interactionId : [interactionId];
+    socket.emit("update_status", { interactionId: ids, status });
+  },
+
+  setInteractions: (interactions: interactions[]) => {
+    set({ interactions });
+  },
+
+  setSelectedInteractions: (selectedInteractions: string[]) => {
+    set({ selectedInteractions });
   },
 }));
 

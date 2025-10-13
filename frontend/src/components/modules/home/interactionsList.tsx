@@ -43,7 +43,7 @@ function InteractionsList() {
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const ITEMS_PER_PAGE = 10;
-
+  const [selectedItems, setSelectedItems] = useState<string[]>([]);
   const [columnVisibility, setColumnVisibility] = useState({
     analisador: true,
     analista: true,
@@ -70,8 +70,8 @@ function InteractionsList() {
 
     if (sorting) {
       filtered.sort((a, b) => {
-        const base = baseSort(a,b);
-        if(base !== 0) return base;
+        const base = baseSort(a, b);
+        if (base !== 0) return base;
 
         let valA, valB;
 
@@ -119,7 +119,15 @@ function InteractionsList() {
   };
 
   const handleUpdateAppraiser = (interactionID: string, appraiserName: string) => {
-    updateAppraiserInteraction(interactionID, appraiserName);
+    const idsToUpdate = selectedItems.length > 0 ? selectedItems : [interactionID];
+    updateAppraiserInteraction(idsToUpdate, appraiserName);
+    setSelectedItems([]);
+  };
+
+  const handleUpdateStatus = (interactionID: string, status: 'pending' | 'finished') => {
+    const idsToUpdate = selectedItems.length > 0 ? selectedItems : [interactionID];
+    updateInteractionStatus(idsToUpdate, status);
+    setSelectedItems([]);
   };
 
   const toggleColumn = (column: columnID) => {
@@ -128,6 +136,22 @@ function InteractionsList() {
 
   const handleSort = (column: columnID, direction: 'asc' | 'desc') => {
     setSorting({ column, direction });
+  };
+
+  const handleSelectAll = (checked: boolean) => {
+    if (checked) {
+      setSelectedItems(currentInteractions.map(item => item.id));
+    } else {
+      setSelectedItems([]);
+    }
+  };
+
+  const handleSelectItem = (id: string, checked: boolean) => {
+    if (checked) {
+      setSelectedItems(prev => [...prev, id]);
+    } else {
+      setSelectedItems(prev => prev.filter(item => item !== id));
+    }
   };
 
 
@@ -232,7 +256,11 @@ function InteractionsList() {
             <TableHeader className="sticky top-0 bg-white z-10">
               <TableRow>
                 <TableHead className="flex items-center">
-                  <Checkbox aria-label="Select all" />
+                  <Checkbox
+                    aria-label="Select all"
+                    onCheckedChange={handleSelectAll}
+                    checked={selectedItems.length === currentInteractions.length && currentInteractions.length > 0}
+                  />
                 </TableHead>
                 {columnVisibility.analisador && <SortableHeader column="analisador" title="Analisador" />}
                 {columnVisibility.analista && <SortableHeader column="analista" title="Analista" />}
@@ -244,7 +272,12 @@ function InteractionsList() {
               {currentInteractions.map((interaction: interactions) => (
                 <TableRow key={interaction.id} className={cn(interaction.status === 'finished' && 'bg-muted hover:bg-muted')}>
                   <TableCell>
-                    <Checkbox className='flex items-center justify-center' aria-label="Select interaction" />
+                    <Checkbox
+                      className='flex items-center justify-center'
+                      aria-label="Select interaction"
+                      onCheckedChange={(checked) => handleSelectItem(interaction.id, !!checked)}
+                      checked={selectedItems.includes(interaction.id)}
+                    />
                   </TableCell>
                   {columnVisibility.analisador && (
                     <TableCell>
@@ -270,7 +303,7 @@ function InteractionsList() {
                     <TableCell>
                       <Select
                         value={interaction.status}
-                        onValueChange={(value: 'pending' | 'finished') => updateInteractionStatus(interaction.id, value)}
+                        onValueChange={(value: 'pending' | 'finished') => handleUpdateStatus(interaction.id, value)}
                       >
                         <SelectTrigger className="w-32">
                           <SelectValue />
@@ -290,15 +323,15 @@ function InteractionsList() {
           </Table>
         </div>
         <TableFooter className='bg-white flex items-center justify-center rounded-b-xl'>
-            <TableRow>
-                <TableCell colSpan={Object.values(columnVisibility).filter(Boolean).length + 1}>
-                    <TablePagination
-                        currentPage={currentPage}
-                        totalPages={totalPages}
-                        onPageChange={handlePageChange}
-                    />
-                </TableCell>
-            </TableRow>
+          <TableRow>
+            <TableCell colSpan={Object.values(columnVisibility).filter(Boolean).length + 1}>
+              <TablePagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                onPageChange={handlePageChange}
+              />
+            </TableCell>
+          </TableRow>
         </TableFooter>
       </div>
     </div >

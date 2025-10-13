@@ -45,7 +45,7 @@ function AppraiserInteractionList() {
     const [searchTerm, setSearchTerm] = useState('');
     const [currentPage, setCurrentPage] = useState(1);
     const ITEMS_PER_PAGE = 10;
-
+    const [selectedItems, setSelectedItems] = useState<string[]>([]);
     const [columnVisibility, setColumnVisibility] = useState({
         analisador: true,
         analista: true,
@@ -138,8 +138,16 @@ function AppraiserInteractionList() {
     };
 
     const handleUpdateAppraiser = (interactionID: string, appraiserName: string) => {
-        updateAppraiserInteraction(interactionID, appraiserName);
-    }
+        const idsToUpdate = selectedItems.length > 0 ? selectedItems : [interactionID];
+        updateAppraiserInteraction(idsToUpdate, appraiserName);
+        setSelectedItems([]);
+    };
+    
+    const handleUpdateStatus = (interactionID: string, status: 'pending' | 'finished') => {
+        const idsToUpdate = selectedItems.length > 0 ? selectedItems : [interactionID];
+        updateInteractionStatus(idsToUpdate, status);
+        setSelectedItems([]);
+    };
 
     const toggleColumn = (column: appraiserColumnID) => {
         setColumnVisibility((prev) => ({ ...prev, [column]: !prev[column] }));
@@ -147,6 +155,22 @@ function AppraiserInteractionList() {
 
     const handleSort = (column: appraiserColumnID, direction: 'asc' | 'desc') => {
         setSorting({ column, direction });
+    };
+
+    const handleSelectAll = (checked: boolean) => {
+        if (checked) {
+            setSelectedItems(currentInteractions.map(item => item.interaction.id));
+        } else {
+            setSelectedItems([]);
+        }
+    };
+
+    const handleSelectItem = (id: string, checked: boolean) => {
+        if (checked) {
+            setSelectedItems(prev => [...prev, id]);
+        } else {
+            setSelectedItems(prev => prev.filter(item => item !== id));
+        }
     };
 
     const SortableHeader = ({ column, title }: { column: appraiserColumnID; title: string }) => (
@@ -268,7 +292,11 @@ function AppraiserInteractionList() {
                         <TableHeader className="sticky top-0 bg-white z-10">
                             <TableRow>
                                 <TableHead className="flex items-center">
-                                    <Checkbox aria-label="Select all" />
+                                    <Checkbox
+                                        aria-label="Select all"
+                                        onCheckedChange={handleSelectAll}
+                                        checked={selectedItems.length === currentInteractions.length && currentInteractions.length > 0}
+                                    />
                                 </TableHead>
                                 {columnVisibility.analisador && <SortableHeader column="analisador" title="Analisador" />}
                                 {columnVisibility.analista && <SortableHeader column="analista" title="Analista" />}
@@ -284,7 +312,12 @@ function AppraiserInteractionList() {
                                 currentInteractions.map((interaction: appraiserInteractions) => (
                                     <TableRow key={interaction.interaction.id} className={cn(interaction.interaction.status === 'finished' && 'bg-muted hover:bg-muted')}>
                                         <TableCell>
-                                            <Checkbox className='flex items-center justify-center' aria-label="Select interaction" />
+                                            <Checkbox
+                                                className='flex items-center justify-center'
+                                                aria-label="Select interaction"
+                                                onCheckedChange={(checked) => handleSelectItem(interaction.interaction.id, !!checked)}
+                                                checked={selectedItems.includes(interaction.interaction.id)}
+                                            />
                                         </TableCell>
                                         {columnVisibility.analisador && (
                                             <TableCell>
@@ -363,7 +396,7 @@ function AppraiserInteractionList() {
                                             <TableCell>
                                             <Select
                                                 value={interaction.interaction.status}
-                                                onValueChange={(value: 'pending' | 'finished') => updateInteractionStatus(interaction.interaction.id, value)}
+                                                onValueChange={(value: 'pending' | 'finished') => handleUpdateStatus(interaction.interaction.id, value)}
                                             >
                                                 <SelectTrigger className="w-32">
                                                 <SelectValue />
